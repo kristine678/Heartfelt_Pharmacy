@@ -1,0 +1,361 @@
+/* TASK 1 — Sales page. Only page-specific pieces live here: the tabs, the KPI cards, the chart
+   wrappers, the custom donut legend and the per-row badges. Everything else reuses the shared pink
+   tokens and components from style.css, so the page matches the rest of the app. */
+
+.sales-page-title {
+    align-items: flex-start;
+}
+
+.sales-controls {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 16px;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.sales-tabs {
+    display: inline-flex;
+    gap: 6px;
+    padding: 6px;
+    border-radius: 16px;
+    background: var(--pink-50);
+    border: 1px solid var(--pink-200);
+}
+
+.sales-tab {
+    border: 0;
+    background: transparent;
+    color: var(--pink-900);
+    font-weight: 700;
+    font-size: 0.92rem;
+    padding: 9px 16px;
+    border-radius: 12px;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    transition: background var(--anim-speed) ease, color var(--anim-speed) ease, box-shadow var(--anim-speed) ease, transform var(--anim-speed) var(--bounce-ease);
+}
+
+.sales-tab i {
+    color: var(--pink-400);
+}
+
+.sales-tab:hover {
+    background: rgba(255, 92, 154, 0.1);
+    transform: translateY(-1px);
+}
+
+.sales-tab.active,
+.sales-tab.active:hover {
+    background: linear-gradient(135deg, var(--pink-600), var(--pink-700));
+    color: var(--white);
+    box-shadow: 0 8px 18px rgba(107, 8, 54, 0.28);
+}
+
+.sales-tab.active i {
+    color: var(--white);
+}
+
+.sales-tab:focus-visible {
+    outline: none;
+    box-shadow: 0 0 0 4px rgba(255, 92, 154, 0.18);
+}
+
+.sales-pickers {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    align-items: flex-end;
+}
+
+.sales-picker {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    font-size: 0.82rem;
+    font-weight: 700;
+    color: var(--pink-700);
+}
+
+.sales-picker[hidden] {
+    display: none !important;
+}
+
+.sales-picker input {
+    border: 1px solid var(--pink-200);
+    border-radius: 12px;
+    padding: 9px 12px;
+    font: inherit;
+    color: var(--ink);
+    background: var(--white);
+}
+
+.sales-status {
+    margin: 0 0 14px;
+    padding: 11px 14px;
+    border-radius: 14px;
+    font-weight: 600;
+    background: var(--pink-50);
+    border: 1px solid var(--pink-200);
+    color: var(--pink-700);
+}
+
+.sales-status.error {
+    background: #ffe3e3;
+    border-color: #ffc9c9;
+    color: #c92a2a;
+}
+
+.sales-status.warning {
+    background: #fff3bf;
+    border-color: #ffe9a8;
+    color: #e67700;
+}
+
+.sales-kpis {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 16px;
+    margin-bottom: 18px;
+}
+
+.sales-kpi {
+    background: linear-gradient(180deg, var(--white), #fff8fb);
+    border: 1px solid var(--pink-200);
+    border-radius: 20px;
+    padding: 16px 18px;
+    box-shadow: 0 8px 18px rgba(255, 92, 154, 0.07);
+}
+
+.sales-kpi-label {
+    margin: 0 0 6px;
+    font-size: 0.8rem;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    color: var(--muted);
+    font-weight: 700;
+}
+
+.sales-kpi-value {
+    margin: 0 0 8px;
+    font-size: 1.65rem;
+    font-weight: 800;
+    color: var(--pink-700);
+    line-height: 1.15;
+}
+
+.sales-trend {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    font-size: 0.8rem;
+    font-weight: 700;
+    padding: 4px 10px;
+    border-radius: 999px;
+}
+
+.sales-trend.up {
+    background: #dff7ea;
+    color: #2f7d55;
+}
+
+.sales-trend.down {
+    background: #ffe3e3;
+    color: #c92a2a;
+}
+
+.sales-trend.flat {
+    background: var(--pink-50);
+    color: var(--pink-700);
+}
+
+.sales-trend.neutral {
+    background: #f4eef2;
+    color: var(--muted);
+}
+
+.sales-empty {
+    background: linear-gradient(180deg, var(--white), #fff8fb);
+    border: 1px dashed var(--pink-200);
+    border-radius: 20px;
+    padding: 34px 20px;
+    text-align: center;
+    color: var(--muted);
+    margin-bottom: 18px;
+}
+
+.sales-empty i {
+    font-size: 1.7rem;
+    color: var(--pink-300);
+    margin-bottom: 8px;
+}
+
+.sales-empty p {
+    margin: 4px 0;
+    font-weight: 600;
+}
+
+.sales-charts {
+    display: grid;
+    grid-template-columns: 1.35fr 1fr;
+    gap: 18px;
+    align-items: start;
+    margin-bottom: 18px;
+}
+
+.sales-chart-card h2,
+.sales-table-card h2 {
+    margin: 0 0 12px;
+    color: var(--pink-700);
+    font-size: 1.05rem;
+}
+
+.sales-chart-head {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 12px;
+}
+
+.sales-chart-head h2 {
+    margin: 0;
+}
+
+.sales-metric-toggle .chip {
+    font-size: 0.8rem;
+    padding: 6px 12px;
+}
+
+.sales-canvas-wrap {
+    position: relative;
+    width: 100%;
+    height: 288px;
+}
+
+.sales-chart-fallback {
+    margin: 8px 0 0;
+    font-size: 0.85rem;
+    color: var(--muted);
+}
+
+.sales-legend {
+    list-style: none;
+    margin: 14px 0 0;
+    padding: 0;
+    display: grid;
+    gap: 8px;
+    max-height: 230px;
+    overflow-y: auto;
+}
+
+.sales-legend-item {
+    display: grid;
+    grid-template-columns: 14px 1fr auto;
+    grid-template-areas:
+        "swatch name share"
+        "swatch detail detail";
+    gap: 2px 10px;
+    align-items: center;
+    font-size: 0.86rem;
+}
+
+.sales-swatch {
+    grid-area: swatch;
+    width: 14px;
+    height: 14px;
+    border-radius: 4px;
+    align-self: start;
+    margin-top: 3px;
+}
+
+.sales-legend-name {
+    grid-area: name;
+    font-weight: 700;
+    color: var(--ink);
+    min-width: 0;
+    overflow-wrap: anywhere;
+}
+
+.sales-legend-share {
+    grid-area: share;
+    font-weight: 700;
+    color: var(--pink-700);
+}
+
+.sales-legend-detail {
+    grid-area: detail;
+    color: var(--muted);
+    font-size: 0.78rem;
+}
+
+.sales-table-card {
+    margin-bottom: 18px;
+}
+
+.sales-table .num {
+    text-align: right;
+    font-variant-numeric: tabular-nums;
+}
+
+.sales-table tbody td {
+    vertical-align: middle;
+}
+
+/* Loading / empty states: dim the panels while a period switch is in flight. */
+#sales-panel.is-loading .sales-kpis,
+#sales-panel.is-loading .sales-charts,
+#sales-panel.is-loading .sales-table-card {
+    opacity: 0.55;
+    transition: opacity var(--anim-fast) ease;
+}
+
+.sales-card-hidden {
+    display: none;
+}
+
+@media (max-width: 1100px) {
+    .sales-charts {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media (max-width: 720px) {
+    .sales-controls {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .sales-tabs {
+        width: 100%;
+        justify-content: space-between;
+    }
+
+    .sales-tab {
+        flex: 1;
+        justify-content: center;
+    }
+
+    .sales-pickers {
+        width: 100%;
+    }
+
+    .sales-picker {
+        flex: 1 1 140px;
+    }
+
+    .sales-picker input {
+        width: 100%;
+    }
+
+    .sales-canvas-wrap {
+        height: 240px;
+    }
+
+    .sales-legend-item {
+        grid-template-columns: 14px 1fr auto;
+    }
+}

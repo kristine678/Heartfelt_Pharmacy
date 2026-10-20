@@ -1,0 +1,386 @@
+/* Medicine inventory alert pop-up (bell badge + dialog).
+   Colors follow the app palette and the existing status pills:
+   red = expired / out of stock, orange = expiring soon, yellow = low stock. */
+
+:root {
+    --alert-red: #c13a60;
+    --alert-red-bg: #ffe3ee;
+    --alert-orange: #e67700;
+    --alert-orange-bg: #fff0dd;
+    --alert-yellow: #b96b2d;
+    --alert-yellow-bg: #fff2c9;
+    --alert-green: #2f8f5d;
+    --alert-green-bg: #dff6eb;
+}
+
+/* ---- Bell in the sidebar (navbar) ---- */
+.alert-bell {
+    position: relative;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    width: 100%;
+    margin-top: 4px;
+    padding: 11px 14px;
+    border: 1px dashed var(--pink-200);
+    border-radius: 12px;
+    background: rgba(255, 255, 255, 0.75);
+    color: var(--heading);
+    font: inherit;
+    font-weight: 600;
+    cursor: pointer;
+    text-align: left;
+    transition: background 0.2s ease, border-color 0.2s ease;
+}
+
+.alert-bell:hover,
+.alert-bell:focus-visible {
+    background: #fff;
+    border-color: var(--pink-400);
+    outline: none;
+}
+
+.alert-bell:focus-visible {
+    box-shadow: 0 0 0 3px var(--pink-shadow);
+}
+
+.alert-bell.has-alerts {
+    border-style: solid;
+    border-color: var(--alert-red);
+    background: var(--alert-red-bg);
+    color: var(--alert-red);
+}
+
+.alert-bell-count {
+    min-width: 22px;
+    height: 22px;
+    margin-left: auto;
+    padding: 0 6px;
+    border-radius: 999px;
+    background: var(--alert-red);
+    color: #fff;
+    font-size: 0.75rem;
+    font-weight: 700;
+    line-height: 22px;
+    text-align: center;
+}
+
+/* ---- Overlay / dialog ---- */
+.med-alert-overlay {
+    position: fixed;
+    inset: 0;
+    z-index: 3000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 16px;
+    background: rgba(107, 8, 54, 0.45);
+    backdrop-filter: blur(2px);
+    opacity: 0;
+    transition: opacity 0.2s ease;
+}
+
+.med-alert-overlay[hidden] {
+    display: none;
+}
+
+.med-alert-overlay.visible {
+    opacity: 1;
+}
+
+.med-alert-card {
+    display: flex;
+    flex-direction: column;
+    width: min(640px, 100%);
+    max-height: min(85vh, 720px);
+    background: #fffdfefe;
+    border: 1px solid var(--pink-200);
+    border-radius: 18px;
+    box-shadow: 0 24px 60px rgba(107, 8, 54, 0.28);
+    transform: translateY(12px) scale(0.98);
+    transition: transform 0.2s ease;
+    overflow: hidden;
+}
+
+.med-alert-overlay.visible .med-alert-card {
+    transform: translateY(0) scale(1);
+}
+
+.med-alert-head {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    padding: 18px 20px 12px;
+    border-bottom: 1px solid var(--pink-100);
+    background: linear-gradient(135deg, var(--pink-50), #fff);
+}
+
+.med-alert-heading {
+    flex: 1;
+    min-width: 0;
+}
+
+.med-alert-heading h2 {
+    margin: 0;
+    font-size: 1.15rem;
+    color: var(--heading);
+}
+
+.med-alert-heading h2 i {
+    color: var(--alert-red);
+    margin-right: 4px;
+}
+
+.med-alert-sub {
+    margin: 4px 0 0;
+    font-size: 0.85rem;
+    color: #8a6076;
+}
+
+.med-alert-close {
+    border: 0;
+    background: transparent;
+    color: var(--pink-700);
+    font-size: 1.6rem;
+    line-height: 1;
+    cursor: pointer;
+    padding: 2px 6px;
+    border-radius: 8px;
+}
+
+.med-alert-close:hover,
+.med-alert-close:focus-visible {
+    background: var(--pink-100);
+    outline: none;
+}
+
+.med-alert-body {
+    flex: 1;
+    min-height: 90px;
+    padding: 14px 20px;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+}
+
+.med-alert-body:focus {
+    outline: none;
+}
+
+.med-alert-group + .med-alert-group {
+    margin-top: 16px;
+}
+
+.med-alert-group-title {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin: 0 0 8px;
+    font-size: 0.8rem;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: #8a6076;
+}
+
+.med-alert-group-title .group-count {
+    display: inline-block;
+    min-width: 20px;
+    padding: 1px 7px;
+    border-radius: 999px;
+    font-size: 0.72rem;
+    font-weight: 700;
+    text-align: center;
+    color: #fff;
+    background: var(--pink-400);
+}
+
+.med-alert-list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    gap: 8px;
+}
+
+/* ---- Rows: color coded by severity ---- */
+.med-alert-row {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    padding: 10px 12px;
+    border-radius: 12px;
+    border-left: 4px solid transparent;
+    background: #fff;
+}
+
+.med-alert-row.sev-critical {
+    border-left-color: var(--alert-red);
+    background: var(--alert-red-bg);
+}
+
+.med-alert-row.sev-warning {
+    border-left-color: var(--alert-orange);
+    background: var(--alert-orange-bg);
+}
+
+.med-alert-row.sev-low {
+    border-left-color: var(--alert-yellow);
+    background: var(--alert-yellow-bg);
+}
+
+.med-alert-chip {
+    flex-shrink: 0;
+    padding: 4px 9px;
+    border-radius: 999px;
+    font-size: 0.72rem;
+    font-weight: 700;
+    white-space: nowrap;
+}
+
+.sev-critical .med-alert-chip {
+    color: var(--alert-red);
+    background: #fff;
+    border: 1px solid var(--alert-red);
+}
+
+.sev-warning .med-alert-chip {
+    color: var(--alert-orange);
+    background: #fff;
+    border: 1px solid var(--alert-orange);
+}
+
+.sev-low .med-alert-chip {
+    color: var(--alert-yellow);
+    background: #fff;
+    border: 1px solid var(--alert-yellow);
+}
+
+.med-alert-info {
+    min-width: 0;
+}
+
+.med-alert-name {
+    display: block;
+    font-weight: 700;
+    color: var(--ink);
+    overflow-wrap: anywhere;
+}
+
+.med-alert-batch {
+    font-weight: 500;
+    font-size: 0.78rem;
+    color: #8a6076;
+}
+
+.med-alert-meta {
+    margin-top: 2px;
+    font-size: 0.83rem;
+    color: #6d4a5c;
+}
+
+.med-alert-meta b {
+    color: inherit;
+}
+
+.med-alert-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin-top: 6px;
+}
+
+.med-alert-tag {
+    font-size: 0.7rem;
+    font-weight: 700;
+    padding: 2px 7px;
+    border-radius: 999px;
+    background: rgba(255, 255, 255, 0.85);
+    border: 1px dashed currentColor;
+}
+
+.med-alert-tag.tag-red { color: var(--alert-red); }
+.med-alert-tag.tag-orange { color: var(--alert-orange); }
+.med-alert-tag.tag-yellow { color: var(--alert-yellow); }
+
+/* ---- Empty state ---- */
+.med-alert-empty {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 26px 12px;
+    text-align: center;
+    color: var(--alert-green);
+}
+
+.med-alert-empty i {
+    font-size: 2rem;
+}
+
+.med-alert-empty p {
+    margin: 0;
+    color: #4a6b5c;
+    font-size: 0.92rem;
+}
+
+.med-alert-empty .empty-detail {
+    color: #8a6076;
+    font-size: 0.8rem;
+}
+
+/* ---- Footer buttons ---- */
+.med-alert-foot {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: flex-end;
+    gap: 10px;
+    padding: 14px 20px;
+    border-top: 1px solid var(--pink-100);
+    background: var(--pink-50);
+}
+
+.med-alert-foot .btn {
+    min-height: 40px;
+}
+
+/* ---- Mobile ---- */
+@media (max-width: 600px) {
+    .med-alert-overlay {
+        padding: 10px;
+        align-items: flex-end;
+    }
+
+    .med-alert-card {
+        max-height: 90vh;
+        border-radius: 16px 16px 0 0;
+    }
+
+    .med-alert-row {
+        flex-direction: column;
+        gap: 6px;
+    }
+
+    .med-alert-foot {
+        flex-direction: column-reverse;
+    }
+
+    .med-alert-foot .btn,
+    .med-alert-foot a.btn {
+        width: 100%;
+        text-align: center;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .med-alert-overlay,
+    .med-alert-card {
+        transition: none;
+    }
+}
+
+@media print {
+    .med-alert-overlay,
+    .alert-bell {
+        display: none !important;
+    }
+}
